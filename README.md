@@ -14,18 +14,18 @@ This project should work with anything that's also compatible with Python3 and P
 
 While in the game folder, just run the following command into your CLI:  
 
-`python3 main.py`
+> `python3 main.py`
 
 ## Copyright
 
 ### Pizza-sprite
-Author: [Gobusto](https://opengameart.org/content/pizza-sprite)
+Author: [Gobusto](https://opengameart.org/content/pizza-sprite)  
 Distributed [Under Creative Commons 3.0 Attribution-ShareAlike 3.0 Unported](https://creativecommons.org/licenses/by-sa/3.0/)
 
 ### Wood Texture Tile
-Author: [JCW](https://opengameart.org/content/wood-texture-tiles)
+Author: [JCW](https://opengameart.org/content/wood-texture-tiles)  
 Distributed [Under Creative Commons 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/)
 
 ### Space Shooter Redux
-Author: [Kenney](https://kenney.nl/assets/space-shooter-redux)
+Author: [Kenney](https://kenney.nl/assets/space-shooter-redux)  
 Distributed [Under Creative Commons 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/)

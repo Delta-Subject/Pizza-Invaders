@@ -81,6 +81,7 @@ class Mob(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = mob_img
         self.rect = self.image.get_rect()
+        self.radius = int(self.rect.width * .85 / 2)
         self.rect.x = random.randrange(WIDTH - self.rect.width)
         self.rect.y = random.randrange(-100, -40)
         self.speedy = random.randrange(3, 5)
@@ -135,7 +136,7 @@ while active:
     # Updates
     all_sprites.update()
 
-    hit = pygame.sprite.spritecollide(player, mobs, False)
+    hit = pygame.sprite.spritecollide(player, mobs, False, pygame.sprite.collide_rect_ratio(0.6))
     if hit:
         print('Collision Detected!')
 
