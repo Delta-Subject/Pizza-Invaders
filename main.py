@@ -135,6 +135,7 @@ for i in range(10):   # Add n mobs
     mob = Mob()
     mobs.add(mob)
     all_sprites.add(mob)
+score = 0
 
 # Game Loop
 active = True
@@ -158,6 +159,11 @@ while active:
     shooted = pygame.sprite.groupcollide(mobs, bullets, True, True)
     if shooted:
         print('Mob Eliminated')
+        score += 10
+        print('Score: ' + str(score))
+        mob = Mob()
+        all_sprites.add(mob)
+        mobs.add(mob)
 
     # Draws
     WINDOW.fill(GREY)
