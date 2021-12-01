@@ -19,7 +19,7 @@ GREEN = (0, 255, 0)
 pygame.init()
 pygame.mixer.init()
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption('DEMO | Pizza Invaders v.0.3')
+pygame.display.set_caption('DEMO | Pizza Invaders v.0.4')
 CLOCK = pygame.time.Clock()
 all_sprites = pygame.sprite.Group()
 
