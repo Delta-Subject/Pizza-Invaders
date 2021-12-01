@@ -137,6 +137,16 @@ for i in range(10):   # Add n mobs
     all_sprites.add(mob)
 score = 0
 
+# Rendering Functions
+
+font_name = pygame.font.match_font('arial')
+def write(surf, text, size, x, y):
+    font = pygame.font.Font(font_name, size)
+    text_surface = font.render(text, False, WHITE)   # Turned antialising on FALSE
+    text_rect = text_surface.get_rect()
+    text_rect.midtop = (x, y)
+    surf.blit(text_surface, text_rect)
+
 # Game Loop
 active = True
 while active:
@@ -161,7 +171,7 @@ while active:
         print('Mob Eliminated')
         score += 10
         print('Score: ' + str(score))
-        mob = Mob()
+        mob = Mob()              # Respawn mobs each time another has been eliminated
         all_sprites.add(mob)
         mobs.add(mob)
 
@@ -169,6 +179,7 @@ while active:
     WINDOW.fill(GREY)
     WINDOW.blit(bg, bg_rect)
     all_sprites.draw(WINDOW)
+    write(WINDOW, str(score), 30, 30, 10)
     pygame.display.flip() # Run At Last !!
 
 pygame.quit()
