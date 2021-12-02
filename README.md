@@ -14,7 +14,9 @@ This project should work with anything that's also compatible with Python3 and P
 
 While in the game folder, just run the following command into your CLI:  
 
-> `python3 main.py`
+```
+python3 main.py
+```
 
 ## Copyright
 
