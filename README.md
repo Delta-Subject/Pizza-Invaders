@@ -31,3 +31,7 @@ Distributed [Under Creative Commons 1.0 Universal](https://creativecommons.org/p
 ### Space Shooter Redux
 Author: [Kenney](https://kenney.nl/assets/space-shooter-redux)  
 Distributed [Under Creative Commons 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/)
+
+### 8-bit Fantasy & Adventure Music Pack
+Author: [Marllon Silva (xDeviruchi)](https://xdeviruchi.itch.io/)
+Distributed [Under Creative Commons 4.0 Attribution-ShareAlike](https://creativecommons.org/licenses/by-sa/4.0/legalcode)
