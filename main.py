@@ -19,7 +19,7 @@ GREEN = (0, 255, 0)
 pygame.init()
 pygame.mixer.init()
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption('DEMO | Pizza Invaders v.0.4')
+pygame.display.set_caption('DEMO | Pizza Invaders v.0.5')
 CLOCK = pygame.time.Clock()
 all_sprites = pygame.sprite.Group()
 
@@ -164,13 +164,12 @@ while active:
 
     hit = pygame.sprite.spritecollide(player, mobs, False, pygame.sprite.collide_rect_ratio(0.6))
     if hit:
-        print('Collision Detected!')
+        print('Game Over. Total Score: ' + str(score))
+        active = False
 
     shooted = pygame.sprite.groupcollide(mobs, bullets, True, True)
     if shooted:
-        print('Mob Eliminated')
         score += 10
-        print('Score: ' + str(score))
         mob = Mob()              # Respawn mobs each time another has been eliminated
         all_sprites.add(mob)
         mobs.add(mob)
