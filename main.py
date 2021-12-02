@@ -19,7 +19,7 @@ GREEN = (0, 255, 0)
 pygame.init()
 pygame.mixer.init()
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption('DEMO | Pizza Invaders v.0.5')
+pygame.display.set_caption('DEMO | Pizza Invaders v.0.5.1')
 CLOCK = pygame.time.Clock()
 all_sprites = pygame.sprite.Group()
 
@@ -98,6 +98,10 @@ class Mob(pygame.sprite.Sprite):
             self.rect.y = random.randrange(-100, -40)
             self.speedy = random.randrange(3, 5)
             self.speedx = random.randrange(-3, 3)
+        if score > 500:
+            self.speedy = random.randrange(4, 7)
+        if score > 1000:
+            self.speedy = random.randrange(5, 9)
         self.rotate()
 
     def rotate(self):
@@ -130,12 +134,15 @@ player = Player()
 all_sprites.add(player)
 mobs = pygame.sprite.Group()
 bullets = pygame.sprite.Group()
+n_mobs = 5
+score = 0
+spawned = 0  # 'spawned' variable set to avoid infite mobspawn while score == 500/1000/1500
 
-for i in range(10):   # Add n mobs
+for i in range(n_mobs * 2):   # Add n * 2 mobs
     mob = Mob()
     mobs.add(mob)
     all_sprites.add(mob)
-score = 0
+
 
 # Rendering Functions
 
@@ -173,7 +180,24 @@ while active:
         mob = Mob()              # Respawn mobs each time another has been eliminated
         all_sprites.add(mob)
         mobs.add(mob)
-
+    if score == 500 and spawned == 0:
+        for i in range(n_mobs):
+            mob = Mob()
+            all_sprites.add(mob)
+            mobs.add(mob)
+        spawned += 1
+    if score == 1000 and spawned == 1:
+        for i in range(n_mobs):
+            mob = Mob()
+            all_sprites.add(mob)
+            mobs.add(mob)
+        spawned += 1
+    if score == 1500 and spawned == 2:
+        for i in range(n_mobs):
+            mob = Mob()
+            all_sprites.add(mob)
+            mobs.add(mob)
+        spawned += 1
     # Draws
     WINDOW.fill(GREY)
     WINDOW.blit(bg, bg_rect)
