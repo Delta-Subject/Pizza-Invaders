@@ -26,6 +26,7 @@ all_sprites = pygame.sprite.Group()
 # Folder Config
 game_folder = os.path.dirname(__file__)
 assets_folder = os.path.join(game_folder, 'assets/')
+sounds_folder = os.path.join(assets_folder, 'sfx')
 # IMG CONFIG
 ## BackGround
 bg_img = pygame.image.load(os.path.join(assets_folder, 'wood 2.jpg'))
@@ -44,6 +45,12 @@ bullet_image = pygame.image.load(os.path.join(assets_folder, 'laserBlue06.png'))
 bullet = pygame.transform.scale(bullet_image, (10, 20))
 bullet_rect = bullet.get_rect()
 # AUDIO CONFIG
+shoot_sound = pygame.mixer.Sound(os.path.join(sounds_folder, 'pew.wav'))
+pygame.mixer.music.load(os.path.join(sounds_folder, 'xDeviruchi - Minigame .wav'))
+# pygame.mixer.music.set_volume(0.3)        # In case you ever need to low volume
+explosion_sounds = []
+for sfx in ['expl3.wav', 'expl6.wav']:
+    explosion_sounds.append(pygame.mixer.Sound(os.path.join(sounds_folder, sfx)))
 
 # Sprites Config
 ## Player Sprite
@@ -74,6 +81,7 @@ class Player(pygame.sprite.Sprite):
         bullet = Bullet(self.rect.centerx, self.rect.top)
         all_sprites.add(bullet)
         bullets.add(bullet)
+        shoot_sound.play()
 
 ## Mob Sprite
 class Mob(pygame.sprite.Sprite):
@@ -154,6 +162,7 @@ def write(surf, text, size, x, y):
     text_rect.midtop = (x, y)
     surf.blit(text_surface, text_rect)
 
+pygame.mixer.music.play(loops=-1)
 # Game Loop
 active = True
 while active:
@@ -180,6 +189,7 @@ while active:
         mob = Mob()              # Respawn mobs each time another has been eliminated
         all_sprites.add(mob)
         mobs.add(mob)
+        random.choice(explosion_sounds).play()
     if score == 500 and spawned == 0:
         for i in range(n_mobs):
             mob = Mob()
