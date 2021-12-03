@@ -63,7 +63,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.centerx = WIDTH / 2
         self.rect.bottom = HEIGHT - 10
         self.speed_x = 0
-        self.shield = 100
+        self.health = 100
         
     def update(self):
         # Movement
@@ -155,7 +155,6 @@ for i in range(10):
     new_mob()
 
 # Rendering Functions
-
 font_name = pygame.font.match_font('arial')
 def write(surf, text, size, x, y):
     font = pygame.font.Font(font_name, size)
@@ -163,6 +162,17 @@ def write(surf, text, size, x, y):
     text_rect = text_surface.get_rect()
     text_rect.midtop = (x, y)
     surf.blit(text_surface, text_rect)
+
+def draw_bar(surf, x, y, pct, color_1, color_2):
+    if pct < 0:
+        pct = 0
+    BAR_LENGTH = 100
+    BAR_HEIGHT = 10
+    fill = (pct / 100) * BAR_LENGTH
+    outline_rect = pygame.Rect(x, y, BAR_LENGTH, BAR_HEIGHT)
+    fill_rect = pygame.Rect(x, y, fill, BAR_HEIGHT)
+    pygame.draw.rect(surf, color_1, fill_rect)
+    pygame.draw.rect(surf, color_2, outline_rect, 2)
 
 pygame.mixer.music.play(loops=-1)
 # Game Loop
@@ -182,8 +192,8 @@ while active:
 
     hit = pygame.sprite.spritecollide(player, mobs, True, pygame.sprite.collide_rect_ratio(0.6))
     if hit:
-        player.shield -= 10
-        if player.shield <= 0:
+        player.health -= 10
+        if player.health <= 0:
             print ('Game Over. Total Score: ' + str(score))
             active = False
 
@@ -210,7 +220,7 @@ while active:
     WINDOW.blit(bg, bg_rect)
     all_sprites.draw(WINDOW)
     write(WINDOW, str(score), 30, 30, 10)
-    write(WINDOW, str(player.shield), 30, 30, HEIGHT - 40)
+    draw_bar(WINDOW, 5, HEIGHT - 30, player.health, RED, WHITE)
     pygame.display.flip() # Run At Last !!
 
 pygame.quit()
