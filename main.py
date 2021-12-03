@@ -63,6 +63,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.centerx = WIDTH / 2
         self.rect.bottom = HEIGHT - 10
         self.speed_x = 0
+        self.shield = 100
         
     def update(self):
         # Movement
@@ -142,15 +143,16 @@ player = Player()
 all_sprites.add(player)
 mobs = pygame.sprite.Group()
 bullets = pygame.sprite.Group()
-n_mobs = 5
 score = 0
 spawned = 0  # 'spawned' variable set to avoid infite mobspawn while score == 500/1000/1500
 
-for i in range(n_mobs * 2):   # Add n * 2 mobs
+def new_mob():
     mob = Mob()
     mobs.add(mob)
     all_sprites.add(mob)
 
+for i in range(10):
+    new_mob()
 
 # Rendering Functions
 
@@ -178,41 +180,37 @@ while active:
     # Updates
     all_sprites.update()
 
-    hit = pygame.sprite.spritecollide(player, mobs, False, pygame.sprite.collide_rect_ratio(0.6))
+    hit = pygame.sprite.spritecollide(player, mobs, True, pygame.sprite.collide_rect_ratio(0.6))
     if hit:
-        print('Game Over. Total Score: ' + str(score))
-        active = False
+        player.shield -= 10
+        if player.shield <= 0:
+            print ('Game Over. Total Score: ' + str(score))
+            active = False
 
     shooted = pygame.sprite.groupcollide(mobs, bullets, True, True)
     if shooted:
         score += 10
-        mob = Mob()              # Respawn mobs each time another has been eliminated
-        all_sprites.add(mob)
-        mobs.add(mob)
+        new_mob()
         random.choice(explosion_sounds).play()
     if score == 500 and spawned == 0:
-        for i in range(n_mobs):
-            mob = Mob()
-            all_sprites.add(mob)
-            mobs.add(mob)
+        for i in range(5):
+            new_mob()
         spawned += 1
     if score == 1000 and spawned == 1:
-        for i in range(n_mobs):
-            mob = Mob()
-            all_sprites.add(mob)
-            mobs.add(mob)
+        for i in range(5):
+            new_mob()
         spawned += 1
+   
     if score == 1500 and spawned == 2:
-        for i in range(n_mobs):
-            mob = Mob()
-            all_sprites.add(mob)
-            mobs.add(mob)
+        for i in range(5):
+            new_mob()
         spawned += 1
     # Draws
     WINDOW.fill(GREY)
     WINDOW.blit(bg, bg_rect)
     all_sprites.draw(WINDOW)
     write(WINDOW, str(score), 30, 30, 10)
+    write(WINDOW, str(player.shield), 30, 30, HEIGHT - 40)
     pygame.display.flip() # Run At Last !!
 
 pygame.quit()
