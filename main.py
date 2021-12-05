@@ -50,7 +50,7 @@ explosion_animations['large'] = []
 explosion_animations['small'] = []
 for i in range(9):
     filename = 'regularExplosion0{}.png'.format(i)
-    img = pygame.image.load(os.path.join(assets_folder, filename).convert())
+    img = pygame.image.load(os.path.join(assets_folder, filename)).convert()
     img.set_colorkey(BLACK)
     img_large = pygame.transform.scale(img, (75, 75))
     explosion_animations['large'].append(img_large)
@@ -164,7 +164,7 @@ class Bullet(pygame.sprite.Sprite):
 ## Explosion Sprite
 class Explosion(pygame.sprite.Sprite):
     def __init__(self, center, size):
-        pygame.sprite.Sprite.__init__
+        pygame.sprite.Sprite.__init__(self)
         self.size = size
         self.image = explosion_animations[self.size][0]
         self.rect = self.image.get_rect()
@@ -175,7 +175,7 @@ class Explosion(pygame.sprite.Sprite):
     
     def update(self):
         now = pygame.time.get_ticks()
-        if no - self.last_update > self.frame_rate:
+        if now - self.last_update > self.frame_rate:
             self.last_update = now
             self.frame += 1
             if self.frame == len(explosion_animations[self.size]):
@@ -234,8 +234,8 @@ while active:
     # Updates
     all_sprites.update()
 
-    hit = pygame.sprite.spritecollide(player, mobs, True, pygame.sprite.collide_rect_ratio(0.6))
-    if hit:
+    player_hit = pygame.sprite.spritecollide(player, mobs, True, pygame.sprite.collide_rect_ratio(0.6))
+    for hit in player_hit:
         player.health -= 10
         explosion = Explosion(hit.rect.center, 'small')
         all_sprites.add(explosion)
@@ -243,8 +243,8 @@ while active:
             print ('Game Over. Total Score: ' + str(score))
             active = False
 
-    shooted = pygame.sprite.groupcollide(mobs, bullets, True, True)
-    if shooted:
+    mob_hit = pygame.sprite.groupcollide(mobs, bullets, True, True)
+    for hit in mob_hit:
         score += 10
         explosion = Explosion(hit.rect.center, 'large')
         all_sprites.add(explosion)
