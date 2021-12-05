@@ -44,6 +44,19 @@ mob_rect = mob.get_rect()
 bullet_image = pygame.image.load(os.path.join(assets_folder, 'laserBlue06.png'))
 bullet = pygame.transform.scale(bullet_image, (10, 20))
 bullet_rect = bullet.get_rect()
+## Explosions
+explosion_animations = {}
+explosion_animations['large'] = []
+explosion_animations['small'] = []
+for i in range(9):
+    filename = 'regularExplosion0{}.png'.format(i)
+    img = pygame.image.load(os.path.join(assets_folder, filename).convert())
+    img.set_colorkey(BLACK)
+    img_large = pygame.transform.scale(img, (75, 75))
+    explosion_animations['large'].append(img_large)
+    img_small = pygame.transform.scale(img, (32, 32))
+    explosion_animations['small'].append(img_small)
+
 # AUDIO CONFIG
 shoot_sound = pygame.mixer.Sound(os.path.join(sounds_folder, 'pew.wav'))
 pygame.mixer.music.load(os.path.join(sounds_folder, 'xDeviruchi - Minigame .wav'))
@@ -64,6 +77,8 @@ class Player(pygame.sprite.Sprite):
         self.rect.bottom = HEIGHT - 10
         self.speed_x = 0
         self.health = 100
+        self.shoot_delay = 250
+        self.last_shot = pygame.time.get_ticks()
         
     def update(self):
         # Movement
@@ -73,16 +88,24 @@ class Player(pygame.sprite.Sprite):
             self.speed_x = -8
         if keystate[pygame.K_d] or keystate[pygame.K_RIGHT]:
             self.speed_x = 8
+        if keystate[pygame.K_SPACE]:
+            self.shoot()
         self.rect.x += self.speed_x
         if self.rect.right > WIDTH:
             self.rect.right = WIDTH
         if self.rect.left < 0:
             self.rect.left = 0
     def shoot(self):
-        bullet = Bullet(self.rect.centerx, self.rect.top)
-        all_sprites.add(bullet)
-        bullets.add(bullet)
-        shoot_sound.play()
+        now = pygame.time.get_ticks()
+        if now - self.last_shot > self.shoot_delay:
+            self.last_shot = now
+            bullet = Bullet(self.rect.centerx, self.rect.top)
+            all_sprites.add(bullet)
+            bullets.add(bullet)
+            shoot_sound.play()
+        if score >= 1500:
+            self.shoot_delay = 150
+            
 
 ## Mob Sprite
 class Mob(pygame.sprite.Sprite):
@@ -138,6 +161,30 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.y += self.speedy
         if self.rect.bottom < 0:         # Checks If Bullet Went Offscreen and Kills It
             self.kill()
+## Explosion Sprite
+class Explosion(pygame.sprite.Sprite):
+    def __init__(self, center, size):
+        pygame.sprite.Sprite.__init__
+        self.size = size
+        self.image = explosion_animations[self.size][0]
+        self.rect = self.image.get_rect()
+        self.rect.center = center
+        self.frame = 0
+        self.last_update = pygame.time.get_ticks()
+        self.frame_rate = 50
+    
+    def update(self):
+        now = pygame.time.get_ticks()
+        if no - self.last_update > self.frame_rate:
+            self.last_update = now
+            self.frame += 1
+            if self.frame == len(explosion_animations[self.size]):
+                self.kill()
+            else:
+                center = self.rect.center
+                self.image = explosion_animations[self.size][self.frame]
+                self.rect = self.image.get_rect()
+                self.rect.center = center
 
 player = Player()
 all_sprites.add(player)
@@ -183,9 +230,6 @@ while active:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             active = False
-        elif event.type == pygame.KEYDOWN:    # Shooting Config
-            if event.key == pygame.K_SPACE:
-                player.shoot()
 
     # Updates
     all_sprites.update()
@@ -193,6 +237,8 @@ while active:
     hit = pygame.sprite.spritecollide(player, mobs, True, pygame.sprite.collide_rect_ratio(0.6))
     if hit:
         player.health -= 10
+        explosion = Explosion(hit.rect.center, 'small')
+        all_sprites.add(explosion)
         if player.health <= 0:
             print ('Game Over. Total Score: ' + str(score))
             active = False
@@ -200,6 +246,8 @@ while active:
     shooted = pygame.sprite.groupcollide(mobs, bullets, True, True)
     if shooted:
         score += 10
+        explosion = Explosion(hit.rect.center, 'large')
+        all_sprites.add(explosion)
         new_mob()
         random.choice(explosion_sounds).play()
     if score == 500 and spawned == 0:
